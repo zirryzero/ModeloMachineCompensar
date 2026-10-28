@@ -1,54 +1,131 @@
-# CodeIgniter 4 Framework
+# Modelo Machine Compensar
 
-## What is CodeIgniter?
+Aplicación y backend web desarrollado sobre el framework **CodeIgniter 4** (PHP).
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+---
 
-This repository holds the distributable version of the framework.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## 📋 Requisitos del Sistema
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+- **PHP**: Versión 7.4 o superior (compatible con PHP 8.0+).
+- **Composer**: Administrador de dependencias de PHP.
+- **Extensiones de PHP requeridas**:
+  - `intl`
+  - `mbstring`
+  - `json` (habilitada por defecto en PHP)
+  - `mysqlnd` (si se utiliza MySQL / MariaDB) o la extensión del motor de base de datos correspondiente (`ext-pgsql`, `ext-sqlsrv`, `ext-sqlite3`).
+  - `curl` / `libcurl` (recomendado para peticiones HTTP).
 
-The user guide corresponding to the latest version of the framework can be found
-[here](https://codeigniter4.github.io/userguide/).
+---
 
-## Important Change with index.php
+## 🚀 Instalación y Puesta en Marcha
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+### 1. Clonar el repositorio
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+```bash
+git clone https://github.com/zirryzero/ModeloMachineCompensar.git
+cd ModeloMachineCompensar
+```
 
-**Please** read the user guide for a better explanation of how CI4 works!
+### 2. Instalar dependencias
 
-## Repository Management
+Descarga e instala las librerías necesarias con Composer:
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+```bash
+composer install
+```
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+### 3. Configuración del entorno
 
-## Contributing
+Copia la plantilla de variables de entorno para crear tu propio archivo `.env` local:
 
-We welcome contributions from the community.
+En Linux / macOS:
+```bash
+cp env .env
+```
 
-Please read the [*Contributing to CodeIgniter*](https://github.com/codeigniter4/CodeIgniter4/blob/develop/CONTRIBUTING.md) section in the development repository.
+En Windows (PowerShell / CMD):
+```powershell
+Copy-Item env .env
+```
 
-## Server Requirements
+Luego, edita `.env` para ajustar los parámetros locales:
+- **Entorno de trabajo**:
+  ```ini
+  CI_ENVIRONMENT = development
+  ```
+- **URL Base**:
+  ```ini
+  app.baseURL = 'http://localhost:8080/'
+  ```
+- **Base de Datos** (si aplica):
+  ```ini
+  database.default.hostname = localhost
+  database.default.database = nombre_bd
+  database.default.username = usuario_bd
+  database.default.password = contrasena_bd
+  database.default.DBDriver = MySQLi
+  ```
 
-PHP version 7.4 or higher is required, with the following extensions installed:
+### 4. Generar clave de cifrado (Opcional pero recomendado)
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+Si vas a utilizar sesiones seguras o cifrado:
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+```bash
+php spark key:generate
+```
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+### 5. Iniciar el servidor de desarrollo
+
+Ejecuta el servidor integrado de CodeIgniter:
+
+```bash
+php spark serve
+```
+
+La aplicación estará accesible en: [http://localhost:8080](http://localhost:8080)
+
+---
+
+## 📂 Estructura del Proyecto
+
+```text
+├── app/                  # Código de la aplicación (Controladores, Modelos, Vistas, Config)
+│   ├── Config/           # Configuraciones generales de la app y servicios
+│   ├── Controllers/      # Controladores MVC
+│   ├── Database/         # Migraciones y Seeders
+│   ├── Models/           # Modelos de datos
+│   └── Views/            # Vistas y plantillas
+├── public/               # DocumentRoot del servidor web (index.php, robots.txt, assets públicos)
+├── system/               # Núcleo del framework CodeIgniter 4
+├── tests/                # Pruebas unitarias y funcionales (PHPUnit)
+├── writable/             # Directorio de escritura local (caché, logs, sesiones) [ignorado en git]
+├── .env.example          # Plantilla de referencia para configuración de entorno
+├── composer.json         # Dependencias y scripts de Composer
+└── spark                 # Herramienta de línea de comandos de CodeIgniter
+```
+
+---
+
+## 🔒 Buenas Prácticas de Seguridad
+
+1. **Nunca confirmes archivos `.env` al repositorio**: El archivo `.env` contiene credenciales locales sensibles y está excluido mediante `.gitignore`.
+2. **Apuntar siempre el servidor web a `/public`**: La raíz de tu servidor web (Apache `DocumentRoot`, Nginx `root`, etc.) debe apuntar exclusivamente a la carpeta `/public`, nunca a la raíz del proyecto. Esto previene el acceso directo a los archivos del sistema y de configuración.
+3. **Entorno en producción**: Asegúrate de que `CI_ENVIRONMENT` esté configurado en `production` en entornos productivos para desactivar la barra de depuración y evitar fugas de información en trazas de error.
+
+---
+
+## 🧪 Pruebas Unitarias
+
+Para ejecutar la suite de pruebas automatizadas:
+
+```bash
+composer test
+# O directamente con phpunit:
+vendor/bin/phpunit
+```
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la licencia [MIT](LICENSE).
